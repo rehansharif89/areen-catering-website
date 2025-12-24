@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Areen Admin Panel</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .box {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
+      background: #f59e0b;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d97706;
+    }
+
+    .product-item {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      background: #020617;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .danger {
+      background: #dc2626;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Areen Admin Panel</h1>
+
+<div class="box">
+  <h3>Add Product</h3>
+
+  <label>Category</label>
+  <select id="category"></select>
+
+  <label>Name (EN)</label>
+  <input id="name_en">
+
+  <label>Name (AR)</label>
+  <input id="name_ar">
+
+  <label>Image Path</label>
+  <input id="image" placeholder="images/products/example.jpg">
+
+  <button onclick="addProduct()">Add Product</button>
+</div>
+
+<div class="box">
+  <h3>Delete Products</h3>
+  <div id="productList"></div>
+</div>
+
+<script>
+  const data = JSON.parse(localStorage.getItem("areenData"));
+
+  const catSelect = document.getElementById("category");
+  const list = document.getElementById("productList");
+
+  data.categories.forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat.id;
+    opt.textContent = cat.name_en;
+    catSelect.appendChild(opt);
+  });
+
+  function addProduct() {
+    data.products.push({
+      id: Date.now(),
+      category: category.value,
+      name_en: name_en.value,
+      name_ar: name_ar.value,
+      image: image.value
+    });
+
+    save();
+  }
+
+  function deleteProduct(id) {
+    data.products = data.products.filter(p => p.id !== id);
+    save();
+  }
+
+  function save() {
+    localStorage.setItem("areenData", JSON.stringify(data));
+    render();
+  }
+
+  function render() {
+    list.innerHTML = "";
+    data.products.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "product-item";
+      div.innerHTML = `
+        <span>${p.name_en}</span>
+        <button class="danger" onclick="deleteProduct(${p.id})">Delete</button>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  render();
+</script>
+
+</body>
+</html>
