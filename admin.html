@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Areen Admin Panel</title>
+
   <style>
     body {
       background: #0f172a;
@@ -20,12 +21,12 @@
       padding: 20px;
       border-radius: 12px;
       margin-bottom: 30px;
-      max-width: 500px;
+      max-width: 520px;
     }
 
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 12px;
       font-size: 14px;
     }
 
@@ -38,7 +39,7 @@
     }
 
     button {
-      margin-top: 15px;
+      margin-top: 16px;
       padding: 12px;
       width: 100%;
       background: #f59e0b;
@@ -55,14 +56,29 @@
     .product-item {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-top: 10px;
       background: #020617;
       padding: 10px;
       border-radius: 6px;
+      font-size: 14px;
     }
 
     .danger {
       background: #dc2626;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .danger:hover {
+      background: #b91c1c;
+    }
+
+    small {
+      color: #94a3b8;
     }
   </style>
 </head>
@@ -74,39 +90,50 @@
   <h3>Add Product</h3>
 
   <label>Category</label>
-  <select id="category"></select>
+  <select id="category">
+    <option value="food">Food Supplies</option>
+    <option value="workshop">Workshop Materials</option>
+    <option value="cleaning">Cleaning Items</option>
+  </select>
 
-  <label>Name (EN)</label>
-  <input id="name_en">
+  <label>Name (English)</label>
+  <input id="name_en" placeholder="e.g. Nestle">
 
-  <label>Name (AR)</label>
-  <input id="name_ar">
+  <label>Name (Arabic)</label>
+  <input id="name_ar" placeholder="مثال: نستله">
 
-  <label>Image Path</label>
-  <input id="image" placeholder="images/products/example.jpg">
+  <label>Image Path / URL</label>
+  <input id="image" placeholder="images/brand.png or https://...">
 
   <button onclick="addProduct()">Add Product</button>
 </div>
 
 <div class="box">
-  <h3>Delete Products</h3>
+  <h3>Existing Products</h3>
   <div id="productList"></div>
 </div>
 
 <script>
-  const data = JSON.parse(localStorage.getItem("areenData"));
+  const STORAGE_KEY = "areenData";
 
-  const catSelect = document.getElementById("category");
+  const defaultData = {
+    products: []
+  };
+
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
+
+  const category = document.getElementById("category");
+  const name_en = document.getElementById("name_en");
+  const name_ar = document.getElementById("name_ar");
+  const image = document.getElementById("image");
   const list = document.getElementById("productList");
 
-  data.categories.forEach(cat => {
-    const opt = document.createElement("option");
-    opt.value = cat.id;
-    opt.textContent = cat.name_en;
-    catSelect.appendChild(opt);
-  });
-
   function addProduct() {
+    if (!name_en.value || !name_ar.value || !image.value) {
+      alert("Please fill all fields");
+      return;
+    }
+
     data.products.push({
       id: Date.now(),
       category: category.value,
@@ -116,6 +143,9 @@
     });
 
     save();
+    name_en.value = "";
+    name_ar.value = "";
+    image.value = "";
   }
 
   function deleteProduct(id) {
@@ -124,17 +154,23 @@
   }
 
   function save() {
-    localStorage.setItem("areenData", JSON.stringify(data));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     render();
   }
 
   function render() {
     list.innerHTML = "";
+
+    if (data.products.length === 0) {
+      list.innerHTML = "<small>No products added yet</small>";
+      return;
+    }
+
     data.products.forEach(p => {
       const div = document.createElement("div");
       div.className = "product-item";
       div.innerHTML = `
-        <span>${p.name_en}</span>
+        <span>${p.name_en} <small>(${p.category})</small></span>
         <button class="danger" onclick="deleteProduct(${p.id})">Delete</button>
       `;
       list.appendChild(div);
