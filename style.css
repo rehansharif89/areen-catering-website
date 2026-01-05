@@ -824,3 +824,45 @@ html[dir="rtl"] #langToggle {
     font-size: 12px;
   }
 }
+/* ============================= */
+/* MOBILE HERO FEATURES TUNING */
+/* ============================= */
+@media (max-width: 768px) {
+
+  .hero-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .hero-features .feature {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+    backdrop-filter: blur(6px);
+  }
+
+  /* Make last feature centered */
+  .hero-features .feature:last-child {
+    grid-column: span 2;
+  }
+
+  .hero-features .feature span {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .hero-features h3 {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .hero-features p {
+    font-size: 12px;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+}
