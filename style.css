@@ -761,3 +761,66 @@ html[dir="rtl"] #langToggle {
   }
 
 }
+/* ===============================
+   PRODUCT GRID – PROFESSIONAL FIX
+   =============================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 20px;
+}
+
+/* Product card */
+.card {
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card img {
+  max-width: 100%;
+  max-height: 70px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 13px;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Hover (desktop only) */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  }
+}
+
+/* ===============================
+   MOBILE REFINEMENT
+   =============================== */
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .card {
+    padding: 10px;
+  }
+
+  .card img {
+    max-height: 55px;
+  }
+
+  .card p {
+    font-size: 12px;
+  }
+}
